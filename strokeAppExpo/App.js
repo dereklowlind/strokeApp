@@ -58,20 +58,20 @@ export default class AccelerometerSensor extends React.Component {
     });
   }
 
-  uploadCSV = () => {
-    var fileRef = this.state.deviceType + '.json';
-    console.log('Uploading.' + fileRef);
-    // Create a root reference
-    var storageRef = firebase.storage().ref();
+  // uploadCSV = () => {
+  //   var fileRef = this.state.deviceType + '.json';
+  //   console.log('Uploading.' + fileRef);
+  //   // Create a root reference
+  //   var storageRef = firebase.storage().ref();
 
-    storageRef.child(fileRef).putString(JSON.stringify(dataLog), 'base64')
-    .then(snapshot => {
-        console.log('Uploaded.');
-    })
-    .catch(function(error) {
-      console.error("Error uploading document: ", error);
-  });
-  }
+  //   storageRef.child(fileRef).putString(JSON.stringify(dataLog), 'base64')
+  //   .then(snapshot => {
+  //       console.log('Uploaded.');
+  //   })
+  //   .catch(function(error) {
+  //     console.error("Error uploading document: ", error);
+  // });
+  // }
 
   _writeRecordState = (recState) => {
     console.log("rec state");
