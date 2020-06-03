@@ -34,7 +34,7 @@ const db = firebase.firestore();
 export default class AccelerometerSensor extends React.Component {
   state = {
     accelerometerData: {},
-    deviceType: 'controller',
+    deviceType: 'phone1',
     recState: "stopped",
     processingPhoneData: false,
   }
@@ -179,6 +179,28 @@ export default class AccelerometerSensor extends React.Component {
     });
   }
 
+  renderPhoneAndControllerButtons() {
+    return (
+      <View style={styles.buttonContainer}>
+      <TouchableOpacity onPress={() => this.setState({deviceType: "phone1"})} style={[styles.button, styles.middleButton, this._checkDeviceTypeActive("phone1") && styles.activeButton]}>
+        <Text>Phone 1</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => this.setState({deviceType: "phone2"})} style={[styles.button, this._checkDeviceTypeActive("phone2") && styles.activeButton]}>
+        <Text>Phone 2</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => this.setState({deviceType: "controller"})} style={[styles.button, this._checkDeviceTypeActive("controller") && styles.activeButton]}>
+       <Text>Controller</Text>
+      </TouchableOpacity>
+    </View>
+    )
+  }
+
+  renderRecordingState() {
+    return (
+      <Text style={{ fontWeight: 'bold' }}>{this.state.recState == "stopped" ? "Recording Stopped" : "Recording in Progress"}</Text>
+    )
+  }
+
   render() {
     let { x, y, z } = this.state.accelerometerData;
     let time = new Date();
@@ -195,56 +217,39 @@ export default class AccelerometerSensor extends React.Component {
     if(this._checkDeviceTypeActive("controller")){
       return (
         <View style={styles.sensor}>
-        <Text>Accelerometer:</Text>
-        <Text>x: {round(x)} y: {round(y)} z: {round(z)}</Text>
-    
-        <Text>Selected device type: {this.state.deviceType}</Text>
-        <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => this.setState({deviceType: "controller"})} style={[styles.button, this._checkDeviceTypeActive("controller") && styles.activeButton]}>
-           <Text>Controller</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.setState({deviceType: "phone1"})} style={[styles.button, styles.middleButton, this._checkDeviceTypeActive("phone1") && styles.activeButton]}>
-            <Text>Phone 1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.setState({deviceType: "phone2"})} style={[styles.button, this._checkDeviceTypeActive("phone2") && styles.activeButton]}>
-            <Text>Phone 2</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={this._remote_control_toggle} style={styles.button}>
-            <Text>Start/Stop</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={this._processPhoneData} style={styles.button}>
-            <Text>Process Phone Data</Text>
-          </TouchableOpacity>
-        </View>
-        <Text>recState: {this.state.recState}</Text>
-        
-        {showPhoneData}
-        <Text>{dataLog}</Text>
+          <Text>Accelerometer:</Text>
+          <Text>x: {round(x)} y: {round(y)} z: {round(z)}</Text>
+      
+          <Text>Selected device type: {this.state.deviceType}</Text>
+          {this.renderPhoneAndControllerButtons()}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={this._remote_control_toggle} style={styles.button}>
+              <Text>{this.state.recState == "stopped" ? 'Start' : 'Stop'}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={this._processPhoneData} style={styles.button}>
+              <Text>Process Phone Data</Text>
+            </TouchableOpacity>
+          </View>
+          <Text>{'\n'}</Text>
+          {this.renderRecordingState()}
+          
+          {showPhoneData}
+          <Text>{dataLog}</Text>
  
-      </View> 
+        </View> 
     );
     }else{ //if phone 1 or phone 2
       return (
         <View style={styles.sensor}>
-        <Text>Accelerometer:</Text>
-        <Text>x: {round(x)} y: {round(y)} z: {round(z)}</Text>    
-        <Text>Selected device type: {this.state.deviceType}</Text>
-        <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => this.setState({deviceType: "controller"})} style={[styles.button, this._checkDeviceTypeActive("controller") && styles.activeButton]}>
-           <Text>Controller</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.setState({deviceType: "phone1"})} style={[styles.button, styles.middleButton, this._checkDeviceTypeActive("phone1") && styles.activeButton]}>
-            <Text>Phone 1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.setState({deviceType: "phone2"})} style={[styles.button, this._checkDeviceTypeActive("phone2") && styles.activeButton]}>
-            <Text>Phone 2</Text>
-          </TouchableOpacity>
-        </View>
-          <Text>recState: {this.state.recState}</Text>
+          <Text>Accelerometer:</Text>
+          <Text>x: {round(x)} y: {round(y)} z: {round(z)}</Text>    
+          <Text>Selected device type: {this.state.deviceType}</Text>
+          {this.renderPhoneAndControllerButtons()}
+          <Text>{'\n'}</Text>
+          {this.renderRecordingState()}
+          <Text>{'\n'}</Text>
           <Text>{JSON.stringify(dataLog)}</Text>
         </View>
       )

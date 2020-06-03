@@ -109,7 +109,7 @@ export default class AccelerometerSensor extends React.Component {
     return (
     <div>
       <Button onClick={this._remote_control_toggle} >
-          Start/Stop
+        {this.state.recState == "stopped" ? 'Start' : 'Stop'}
         </Button>
       <Button onClick={this._processPhoneData} >
           Process Phone Data
