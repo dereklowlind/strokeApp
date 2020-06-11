@@ -27,7 +27,7 @@ def lag_finder(y1, y2, sr):
     plt.title('Lag: ' + str(np.round(delay, 3)) + ' s ' + max_corr_title)
     plt.xlabel('Lag')
     plt.ylabel('Correlation coeff')
-    plt.savefig('Figure_1.png')
+    # plt.savefig('Figure_1.png')
     plt.show()
 
 
