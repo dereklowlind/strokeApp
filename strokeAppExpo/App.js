@@ -46,9 +46,22 @@ export default class AccelerometerSensor extends React.Component {
       if(!this._checkDeviceTypeActive("controller")){
         if(querySnapshot.data().recState == "stopped") {
           this._unsubscribe();
+          // write to test1 the "master" struct
           db.collection("test1").doc(this.state.deviceType).set({
             data: JSON.stringify(dataLog),
           })
+          // write to last entry of log1 if that entry does not have data filled in yet
+          db.collection("log1").orderBy("datetime", "desc").limit(1).get().then((lastDataEntry) => {
+            const docId = lastDataEntry.docs[0].id
+            let docData = lastDataEntry.docs[0].data()
+            if(this._checkDeviceTypeActive("phone1") && docData.phone1 === ""){
+              docData.phone1 = JSON.stringify(dataLog)
+              db.collection("log1").doc(docId).set(docData)
+            }else if(this._checkDeviceTypeActive("phone2")  && docData.phone2 === ""){
+              docData.phone2 = JSON.stringify(dataLog)
+              db.collection("log1").doc(docId).set(docData)
+            }
+          })//.then
         } else {
           this._subscribe();
           // reset data log
@@ -86,10 +99,25 @@ export default class AccelerometerSensor extends React.Component {
     });
   }
 
+  _addNewDataEntry = () => {
+    db.collection("log1").add({
+      datetime: new Date(),
+      phone1: "",
+      phone2: "",
+    })
+    .then(function() {
+      console.log("Document successfully written!");
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+  }
+
 
   _remote_control_toggle = () => {
     if (this.state.recState == "recording") {
       console.log("stop recording");
+      this._addNewDataEntry();
       this._writeRecordState("stopped");
     } else {
       console.log("start recording");

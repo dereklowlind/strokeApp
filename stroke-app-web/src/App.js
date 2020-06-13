@@ -1,7 +1,8 @@
 import React from 'react';
 import * as firebase from 'firebase'
 import 'firebase/firestore';
-import {Button} from '@material-ui/core';
+import {Button, TextField} from '@material-ui/core';
+import DataEntriesTable from './components/DataEntriesTable'
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -28,9 +29,25 @@ export default class AccelerometerSensor extends React.Component {
     deviceType: 'controller',
     recState: "stopped",
     processingPhoneData: false,
+    dataEntries: "",
+    description: "",
   }
 
   componentDidMount() {
+    // db.collection("log1").orderBy("datetime", "desc").limit(1).get().then((lastDataEntry) => {
+    //   const docId = lastDataEntry.docs[0].id
+    //   let docData = lastDataEntry.docs[0].data()
+    //   if( true && docData.phone1 === ""){
+    //     docData.phone1 = "set data"
+    //     db.collection("log1").doc(docId).set(docData)
+    //   }else if( true && docData.phone2 === ""){
+    //     docData.phone2 = "set data"
+    //     db.collection("log1").doc(docId).set(docData)
+    //   }
+    // })
+    db.collection("log1").orderBy("datetime", "desc").onSnapshot((dataEntries) => {
+      this.setState({dataEntries: dataEntries})
+    })
     db.collection("test1").doc("recordState").onSnapshot((querySnapshot) => {
       this.setState({recState: querySnapshot.data().recState})
     });
@@ -49,10 +66,26 @@ export default class AccelerometerSensor extends React.Component {
     });
   }
 
+  _addNewDataEntry = () => {
+    db.collection("log1").add({
+      datetime: new Date(),
+      description: this.state.description,
+      phone1: "",
+      phone2: "",
+    })
+    .then(function() {
+      console.log("Document successfully written!");
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+  }
+
 
   _remote_control_toggle = () => {
     if (this.state.recState === "recording") {
       console.log("stop recording");
+      this._addNewDataEntry();
       this._writeRecordState("stopped");
     } else {
       console.log("start recording");
@@ -106,8 +139,13 @@ export default class AccelerometerSensor extends React.Component {
     showPhoneData = <img src='https://firebasestorage.googleapis.com/v0/b/strokeapptest.appspot.com/o/Figure_1.png?alt=media&token=549833eb-3b62-45a5-92df-205df0f5670c'/>
     }
 
+    
+    
     return (
     <div>
+      <TextField id="standard-basic" label="Description"
+        onChange ={(event) => this.setState({description: event.target.value})}>
+      </TextField>
       <Button onClick={this._remote_control_toggle} >
         {this.state.recState == "stopped" ? 'Start' : 'Stop'}
         </Button>
@@ -117,7 +155,7 @@ export default class AccelerometerSensor extends React.Component {
       <div>recState: {this.state.recState}</div>
       
       {showPhoneData}
-
+      <DataEntriesTable dataEntries={this.state.dataEntries} />
     </div> 
     );
     
