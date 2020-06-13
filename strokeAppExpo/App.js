@@ -34,7 +34,7 @@ const db = firebase.firestore();
 export default class AccelerometerSensor extends React.Component {
   state = {
     accelerometerData: {},
-    deviceType: 'phone1',
+    deviceType: 'leftPhone',
     recState: "stopped",
     processingPhoneData: false,
   }
@@ -42,7 +42,7 @@ export default class AccelerometerSensor extends React.Component {
   componentDidMount() {
     db.collection("test1").doc("recordState").onSnapshot((querySnapshot) => {
       this.setState({recState: querySnapshot.data().recState})
-      //if phone 1 or phone 2 toggle record state
+      //if Left Phone or Right Phone toggle record state
       if(!this._checkDeviceTypeActive("controller")){
         if(querySnapshot.data().recState == "stopped") {
           this._unsubscribe();
@@ -54,11 +54,11 @@ export default class AccelerometerSensor extends React.Component {
           db.collection("log1").orderBy("datetime", "desc").limit(1).get().then((lastDataEntry) => {
             const docId = lastDataEntry.docs[0].id
             let docData = lastDataEntry.docs[0].data()
-            if(this._checkDeviceTypeActive("phone1") && docData.phone1 === ""){
-              docData.phone1 = JSON.stringify(dataLog)
+            if(this._checkDeviceTypeActive("leftPhone") && docData.leftPhone === ""){
+              docData.leftPhone = JSON.stringify(dataLog)
               db.collection("log1").doc(docId).set(docData)
-            }else if(this._checkDeviceTypeActive("phone2")  && docData.phone2 === ""){
-              docData.phone2 = JSON.stringify(dataLog)
+            }else if(this._checkDeviceTypeActive("rightPhone")  && docData.rightPhone === ""){
+              docData.rightPhone = JSON.stringify(dataLog)
               db.collection("log1").doc(docId).set(docData)
             }
           })//.then
@@ -102,8 +102,8 @@ export default class AccelerometerSensor extends React.Component {
   _addNewDataEntry = () => {
     db.collection("log1").add({
       datetime: new Date(),
-      phone1: "",
-      phone2: "",
+      leftPhone: "",
+      rightPhone: "",
     })
     .then(function() {
       console.log("Document successfully written!");
@@ -147,12 +147,12 @@ export default class AccelerometerSensor extends React.Component {
     return this.state.deviceType == type
   }
 
-  _sendHttpRequest = (phone1_json, phone2_json) => {
+  _sendHttpRequest = (leftPhone_json, rightPhone_json) => {
     console.log("in send http")
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({"phone1": phone1_json, "phone2": phone2_json});
+    var raw = JSON.stringify({"leftPhone": leftPhone_json, "rightPhone": rightPhone_json});
 
     var requestOptions = {
       method: 'POST',
@@ -177,15 +177,15 @@ export default class AccelerometerSensor extends React.Component {
       querySnapshot.forEach(function(doc){
         data[doc.id] = doc.data()
       });
-      phone1_json = JSON.parse(data["phone1"]["data"])
-      phone2_json = JSON.parse(data["phone2"]["data"])
+      leftPhone_json = JSON.parse(data["leftPhone"]["data"])
+      rightPhone_json = JSON.parse(data["rightPhone"]["data"])
       
       //send http request
       console.log("in send http")
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
   
-      var raw = JSON.stringify({"phone1": phone1_json, "phone2": phone2_json});
+      var raw = JSON.stringify({"leftPhone": leftPhone_json, "rightPhone": rightPhone_json});
   
       var requestOptions = {
         method: 'POST',
@@ -210,15 +210,15 @@ export default class AccelerometerSensor extends React.Component {
   renderPhoneAndControllerButtons() {
     return (
       <View style={styles.buttonContainer}>
-      <TouchableOpacity onPress={() => this.setState({deviceType: "phone1"})} style={[styles.button, styles.middleButton, this._checkDeviceTypeActive("phone1") && styles.activeButton]}>
-        <Text>Phone 1</Text>
+      <TouchableOpacity onPress={() => this.setState({deviceType: "leftPhone"})} style={[styles.button, styles.middleButton, this._checkDeviceTypeActive("leftPhone") && styles.activeButton]}>
+        <Text>Left Phone</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => this.setState({deviceType: "phone2"})} style={[styles.button, this._checkDeviceTypeActive("phone2") && styles.activeButton]}>
-        <Text>Phone 2</Text>
+      <TouchableOpacity onPress={() => this.setState({deviceType: "rightPhone"})} style={[styles.button, this._checkDeviceTypeActive("rightPhone") && styles.activeButton]}>
+        <Text>Right Phone</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => this.setState({deviceType: "controller"})} style={[styles.button, this._checkDeviceTypeActive("controller") && styles.activeButton]}>
+      {/* <TouchableOpacity onPress={() => this.setState({deviceType: "controller"})} style={[styles.button, this._checkDeviceTypeActive("controller") && styles.activeButton]}>
        <Text>Controller</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
     )
   }
@@ -248,7 +248,7 @@ export default class AccelerometerSensor extends React.Component {
           <Text>Accelerometer:</Text>
           <Text>x: {round(x)} y: {round(y)} z: {round(z)}</Text>
       
-          <Text>Selected device type: {this.state.deviceType}</Text>
+          <Text>Selected device type: {this.state.deviceType == "leftPhone" ? 'Left Phone' : 'Right Phone'}</Text>
           {this.renderPhoneAndControllerButtons()}
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={this._remote_control_toggle} style={styles.button}>
@@ -268,12 +268,12 @@ export default class AccelerometerSensor extends React.Component {
  
         </View> 
     );
-    }else{ //if phone 1 or phone 2
+    }else{ //if Left Phone or Right Phone
       return (
         <View style={styles.sensor}>
           <Text>Accelerometer:</Text>
           <Text>x: {round(x)} y: {round(y)} z: {round(z)}</Text>    
-          <Text>Selected device type: {this.state.deviceType}</Text>
+          <Text>Selected device type: {this.state.deviceType == "leftPhone" ? 'Left Phone' : 'Right Phone'}</Text>
           {this.renderPhoneAndControllerButtons()}
           <Text>{'\n'}</Text>
           {this.renderRecordingState()}
