@@ -37,11 +37,11 @@ export default class AccelerometerSensor extends React.Component {
     // db.collection("log1").orderBy("datetime", "desc").limit(1).get().then((lastDataEntry) => {
     //   const docId = lastDataEntry.docs[0].id
     //   let docData = lastDataEntry.docs[0].data()
-    //   if( true && docData.phone1 === ""){
-    //     docData.phone1 = "set data"
+    //   if( true && docData.leftPhone === ""){
+    //     docData.leftPhone = "set data"
     //     db.collection("log1").doc(docId).set(docData)
-    //   }else if( true && docData.phone2 === ""){
-    //     docData.phone2 = "set data"
+    //   }else if( true && docData.rightPhone === ""){
+    //     docData.rightPhone = "set data"
     //     db.collection("log1").doc(docId).set(docData)
     //   }
     // })
@@ -70,8 +70,8 @@ export default class AccelerometerSensor extends React.Component {
     db.collection("log1").add({
       datetime: new Date(),
       description: this.state.description,
-      phone1: "",
-      phone2: "",
+      leftPhone: "",
+      rightPhone: "",
     })
     .then(function() {
       console.log("Document successfully written!");
@@ -101,15 +101,15 @@ export default class AccelerometerSensor extends React.Component {
       querySnapshot.forEach(function(doc){
         data[doc.id] = doc.data()
       });
-      let phone1_json = JSON.parse(data["phone1"]["data"])
-      let phone2_json = JSON.parse(data["phone2"]["data"])
+      let leftPhone_json = JSON.parse(data["leftPhone"]["data"])
+      let rightPhone_json = JSON.parse(data["rightPhone"]["data"])
       
       //send http request
       console.log("in send http")
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
   
-      var raw = JSON.stringify({"phone1": phone1_json, "phone2": phone2_json});
+      var raw = JSON.stringify({"leftPhone": leftPhone_json, "rightPhone": rightPhone_json});
   
       var requestOptions = {
         method: 'POST',
@@ -147,12 +147,12 @@ export default class AccelerometerSensor extends React.Component {
         onChange ={(event) => this.setState({description: event.target.value})}>
       </TextField>
       <Button onClick={this._remote_control_toggle} >
-          Start/Stop
+        {this.state.recState == "stopped" ? 'Start' : 'Stop'}
         </Button>
       <Button onClick={this._processPhoneData} >
           Process Phone Data
       </Button>
-      <div>recState: {this.state.recState}</div>
+      <div>Recording State: {this.state.recState}</div>
       
       {showPhoneData}
       <DataEntriesTable dataEntries={this.state.dataEntries} />

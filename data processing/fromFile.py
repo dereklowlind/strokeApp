@@ -31,43 +31,43 @@ def lag_finder(y1, y2, sr):
     plt.show()
 
 
-def make_graph(phone1_str, phone2_str):
-    phone1_json = json.loads(phone1_str)
-    phone1 = np.array(phone1_json)
-    phone1 = phone1[:,1:4].astype(np.float)
+def make_graph(leftPhone_str, rightPhone_str):
+    leftPhone_json = json.loads(leftPhone_str)
+    leftPhone = np.array(leftPhone_json)
+    leftPhone = leftPhone[:,1:4].astype(np.float)
 
-    phone2_json = json.loads(phone2_str)
-    phone2 = np.array(phone2_json)
-    phone2 = phone2[:,1:4].astype(np.float)
+    rightPhone_json = json.loads(rightPhone_str)
+    rightPhone = np.array(rightPhone_json)
+    rightPhone = rightPhone[:,1:4].astype(np.float)
 
     units = ['G', 'mdps', 'mgauss', 'mbar', 'C', '', '', '']
 
-    print(phone1[0])
-    print(phone2[0])
+    print(leftPhone[0])
+    print(rightPhone[0])
 
-    phone1_mag = []
-    phone2_mag = []
-    for row in phone1:
-        phone1_mag.append(abs(row[0]) + abs(row[1]) + abs(row[2]))
-    for row in phone2:
-        phone2_mag.append(abs(row[0]) + abs(row[2]) + abs(row[2]))
+    leftPhone_mag = []
+    rightPhone_mag = []
+    for row in leftPhone:
+        leftPhone_mag.append(abs(row[0]) + abs(row[1]) + abs(row[2]))
+    for row in rightPhone:
+        rightPhone_mag.append(abs(row[0]) + abs(row[2]) + abs(row[2]))
 
-    print(phone1_mag)
+    print(leftPhone_mag)
 
     # shorten longest recording
-    shortest = len(phone1_mag)
-    if len(phone2_mag) < shortest:
-        shortest = len(phone2_mag)
+    shortest = len(leftPhone_mag)
+    if len(rightPhone_mag) < shortest:
+        shortest = len(rightPhone_mag)
 
-    phone1_mag = phone1_mag[:shortest]
-    phone2_mag = phone2_mag[:shortest]
+    leftPhone_mag = leftPhone_mag[:shortest]
+    rightPhone_mag = rightPhone_mag[:shortest]
 
-    # cAxAy = np.corrcoef(phone1[:,0], phone2[:,1])
-    # cAxAx = np.corrcoef(phone1[:,0], phone2[:,0])
-    # mag_corr = np.corrcoef(phone1_mag, phone2_mag)
-    # mag_corr = [crosscorr(phone1_mag, phone2_mag, lag=i) for i in range(12)]
+    # cAxAy = np.corrcoef(leftPhone[:,0], rightPhone[:,1])
+    # cAxAx = np.corrcoef(leftPhone[:,0], rightPhone[:,0])
+    # mag_corr = np.corrcoef(leftPhone_mag, rightPhone_mag)
+    # mag_corr = [crosscorr(leftPhone_mag, rightPhone_mag, lag=i) for i in range(12)]
 
-    lag_finder(phone1_mag, phone2_mag, shortest)
+    lag_finder(leftPhone_mag, rightPhone_mag, shortest)
 
 
 # main
@@ -75,4 +75,4 @@ fileContents = {}
 with open("testData/CN0SGpAeZK4HprF3SzK7.json") as f:
     fileContents = json.load(f)
 # print(fileContents)
-make_graph(fileContents["data"]["phone1"], fileContents["data"]["phone2"])
+make_graph(fileContents["data"]["leftPhone"], fileContents["data"]["rightPhone"])
