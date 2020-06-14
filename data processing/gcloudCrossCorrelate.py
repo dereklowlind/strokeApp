@@ -97,7 +97,14 @@ def processPhoneData(request):
     
     request_json = request.get_json()
     make_graph(request_json["leftPhone"], request_json["rightPhone"])
-    return "Success"
+    headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '3600'
+        }
+
+    return ("Success", 200, headers)
 
 
 # {
