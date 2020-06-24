@@ -40,8 +40,6 @@ def make_graph(leftPhone_str, rightPhone_str):
     rightPhone = np.array(rightPhone_json)
     rightPhone = rightPhone[:,1:4].astype(np.float)
 
-    units = ['G', 'mdps', 'mgauss', 'mbar', 'C', '', '', '']
-
     print(leftPhone[0])
     print(rightPhone[0])
 
@@ -50,7 +48,7 @@ def make_graph(leftPhone_str, rightPhone_str):
     for row in leftPhone:
         leftPhone_mag.append(abs(row[0]) + abs(row[1]) + abs(row[2]))
     for row in rightPhone:
-        rightPhone_mag.append(abs(row[0]) + abs(row[2]) + abs(row[2]))
+        rightPhone_mag.append(abs(row[0]) + abs(row[1]) + abs(row[2]))
 
     print(leftPhone_mag)
 
@@ -62,17 +60,15 @@ def make_graph(leftPhone_str, rightPhone_str):
     leftPhone_mag = leftPhone_mag[:shortest]
     rightPhone_mag = rightPhone_mag[:shortest]
 
-    # cAxAy = np.corrcoef(leftPhone[:,0], rightPhone[:,1])
-    # cAxAx = np.corrcoef(leftPhone[:,0], rightPhone[:,0])
-    # mag_corr = np.corrcoef(leftPhone_mag, rightPhone_mag)
-    # mag_corr = [crosscorr(leftPhone_mag, rightPhone_mag, lag=i) for i in range(12)]
 
     lag_finder(leftPhone_mag, rightPhone_mag, shortest)
 
 
 # main
 fileContents = {}
-with open("testData/CN0SGpAeZK4HprF3SzK7.json") as f:
+fileName = "testDataArduino/armRecording.json"
+# fileName = "testDataPhone/CN0SGpAeZK4HprF3SzK7.json"
+with open(fileName) as f:
     fileContents = json.load(f)
 # print(fileContents)
 make_graph(fileContents["data"]["leftPhone"], fileContents["data"]["rightPhone"])
