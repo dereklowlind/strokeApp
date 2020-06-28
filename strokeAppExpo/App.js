@@ -231,8 +231,7 @@ export default class AccelerometerSensor extends React.Component {
 
   render() {
     let { x, y, z } = this.state.accelerometerData;
-    let time = new Date();
-    let timeStr = time.toLocaleTimeString() + "." + time.getMilliseconds();
+    let timeStr = Date.now();
     dataLog.push([timeStr,x,y,z]);
     // toggle image to reload it
     let showPhoneData = <Text>Processing Phone Data</Text>;

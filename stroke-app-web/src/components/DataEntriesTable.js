@@ -1,6 +1,7 @@
 import React from 'react';
 import {Table, TableBody, TableCell,TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
-import FileDownloader from './FileDownloader';
+import FileDownloaderJson from './FileDownloaderJson';
+import FileDownloaderCsv from './FileDownloaderCsv'
 
 function DataEntriesTable(props) {
   if(props.dataEntries == ""){
@@ -38,7 +39,10 @@ function DataEntriesTable(props) {
               <TableCell align="right">{row.desc}</TableCell>
               <TableCell align="right">{row.timeStamp}</TableCell>
               <TableCell>
-                <FileDownloader rawData={row.rawData}/>
+                <FileDownloaderJson rawData={row.rawData}/>
+              </TableCell>
+              <TableCell>
+                <FileDownloaderCsv rawData={row.rawData}/>
               </TableCell>
               
             </TableRow>

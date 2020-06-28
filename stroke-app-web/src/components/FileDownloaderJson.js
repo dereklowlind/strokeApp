@@ -1,6 +1,6 @@
 import React from 'react'
 
-class FileDownloader extends React.Component {
+class FileDownloaderJson extends React.Component {
   downloadTxtFile = () => {
     const element = document.createElement("a");
     const jsonContents = {
@@ -25,4 +25,4 @@ class FileDownloader extends React.Component {
     }
   }
 
-  export default FileDownloader;
+  export default FileDownloaderJson;
