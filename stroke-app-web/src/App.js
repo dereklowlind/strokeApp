@@ -136,7 +136,7 @@ export default class AccelerometerSensor extends React.Component {
     let showPhoneData = <div>Processing Phone Data</div>;
     // console.log(this.state.processingPhoneData);
     if(!this.state.processingPhoneData){ // if not processing phone data show image
-    showPhoneData = <img src='https://firebasestorage.googleapis.com/v0/b/strokeapptest.appspot.com/o/Figure_1.png?alt=media&token=549833eb-3b62-45a5-92df-205df0f5670c'/>
+    showPhoneData = <img style={{width: "100%"}} src='https://firebasestorage.googleapis.com/v0/b/strokeapptest.appspot.com/o/Figure_1.png?alt=media&token=549833eb-3b62-45a5-92df-205df0f5670c'/>
     }
 
     
