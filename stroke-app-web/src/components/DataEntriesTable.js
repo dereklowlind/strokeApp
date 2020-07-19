@@ -23,21 +23,23 @@ function DataEntriesTable(props) {
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
         <TableHead>
-          <TableRow>
-            <TableCell>DocId</TableCell>
-            <TableCell align="right">Description</TableCell>
-            <TableCell align="right">TimeStamp</TableCell>
+          <TableRow >
+            <TableCell style={{fontWeight: "bold", fontSize: "105%"}}>Recording ID</TableCell>
+            <TableCell align="left" style={{fontWeight: "bold", fontSize: "105%"}}>Recording Description</TableCell>
+            <TableCell align="left" style={{fontWeight: "bold", fontSize: "105%"}}>Timestamp</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
 
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.docId}>
+            <TableRow key={row.docId} >
               <TableCell component="th" scope="row">
                 {row.docId}
               </TableCell>
-              <TableCell align="right">{row.desc}</TableCell>
-              <TableCell align="right">{row.timeStamp}</TableCell>
+              <TableCell align="left">{row.desc}</TableCell>
+              <TableCell align="left">{row.timeStamp}</TableCell>
               <TableCell>
                 <FileDownloaderJson rawData={row.rawData}/>
               </TableCell>
