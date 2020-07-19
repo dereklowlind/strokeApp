@@ -133,7 +133,7 @@ export default class AccelerometerSensor extends React.Component {
 
   render() {
     // toggle image to reload it
-    let showPhoneData = <div>Processing Phone Data</div>;
+    let showPhoneData = <div style={{marginTop: "40px", marginBottom: "40px", marginLeft: "10px", fontSize: "125%", textAlign: "center"}} >Processing Phone Data...</div>;
     // console.log(this.state.processingPhoneData);
     if(!this.state.processingPhoneData){ // if not processing phone data show image
     showPhoneData = <img style={{width: "100%"}} src='https://firebasestorage.googleapis.com/v0/b/strokeapptest.appspot.com/o/Figure_1.png?alt=media&token=549833eb-3b62-45a5-92df-205df0f5670c'/>
@@ -143,16 +143,16 @@ export default class AccelerometerSensor extends React.Component {
     
     return (
     <div>
-      <TextField id="standard-basic" label="Description"
+      <TextField id="standard-basic" label="Recording Description" style={{marginLeft: "10px", marginTop: "10px"}}
         onChange ={(event) => this.setState({description: event.target.value})}>
       </TextField>
-      <Button onClick={this._remote_control_toggle} >
+      <Button onClick={this._remote_control_toggle} style={{marginTop: "20px", marginLeft: "10px"}} >
         {this.state.recState == "stopped" ? 'Start' : 'Stop'}
         </Button>
-      <Button onClick={this._processPhoneData} >
+      <Button onClick={this._processPhoneData} style={{marginTop: "20px", marginLeft: "10px"}} >
           Process Phone Data
       </Button>
-      <div>Recording State: {this.state.recState}</div>
+      <div style={{marginTop: "20px", marginLeft: "10px", fontSize: "125%", textAlign: "center"}} >{this.state.recState == "stopped" ? "Recording Stopped" : "Recording in Progress..."}</div>
       
       {showPhoneData}
       <DataEntriesTable dataEntries={this.state.dataEntries} />
