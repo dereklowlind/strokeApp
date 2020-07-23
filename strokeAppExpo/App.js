@@ -2,7 +2,9 @@ window.addEventListener = x => x; // temp fix
 global.addEventListener = x => x;
 // https://stackoverflow.com/questions/61429599/error-cloud-firestore-addeventlistener-is-not-a-function-react-native-firestor
 // https://github.com/firebase/firebase-js-sdk/issues/2991
-
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['Setting a timer']);
+// https://github.com/facebook/react-native/issues/12981
 import React from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View, Clipboard, Image } from 'react-native';
 import { Accelerometer } from 'expo-sensors';
@@ -55,11 +57,17 @@ export default class AccelerometerSensor extends React.Component {
             const docId = lastDataEntry.docs[0].id
             let docData = lastDataEntry.docs[0].data()
             if(this._checkDeviceTypeActive("leftPhone") && docData.leftPhone === ""){
+              // setTimeout(() => console.log("write out leftphone"),4000) // sleep 1 s to let try and avoid race condition
               docData.leftPhone = JSON.stringify(dataLog)
-              db.collection("log1").doc(docId).set(docData)
+              // db.collection("log1").doc(docId).set(docData)
+              db.collection("log1").doc(docId).update({leftPhone:JSON.stringify(dataLog)})
+              console.log("write out leftphone")
             }else if(this._checkDeviceTypeActive("rightPhone")  && docData.rightPhone === ""){
+              // setTimeout(() => console.log("write out rightphone"),1000) // sleep 1 s to let try and avoid race condition
               docData.rightPhone = JSON.stringify(dataLog)
-              db.collection("log1").doc(docId).set(docData)
+              // db.collection("log1").doc(docId).set(docData)
+              db.collection("log1").doc(docId).update({rightPhone:JSON.stringify(dataLog)})
+              console.log("write out rightphone")
             }
           })//.then
         } else {
