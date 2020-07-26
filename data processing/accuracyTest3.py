@@ -2,17 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 from scipy import signal
+import statistics
 
 def lag_finder(y1, y2, sr, leftPhone, rightPhone):
-    n = len(y1)
-
-    corr = signal.correlate(y2, y1, mode='same') / np.sqrt(signal.correlate(y1, y1, mode='same')[int(n/2)] * signal.correlate(y2, y2, mode='same')[int(n/2)])
-
-    delay_arr = np.linspace(-0.5*n/sr, 0.5*n/sr, n)
-    delay = delay_arr[np.argmax(corr)]
-    print('y2 is ' + str(delay) + ' behind y1')
-    max_corr = np.amax(corr)
-    print('max correlation is: ' + str(max_corr))
 
     plt.figure(figsize=(20,10))
     plt.subplots_adjust(hspace=0.6)
@@ -41,11 +33,13 @@ def lag_finder(y1, y2, sr, leftPhone, rightPhone):
     plt.title("Magnitudes")
     plt.ylabel('G')
 
+    corr = signal.correlate(y2, y1, mode='same')
+    print(corr)
     plt.subplot(5,1,5)
-    plt.plot(delay_arr, corr)
-    max_corr_title = 'max correlation is: ' + str(round(max_corr,2)*100) + '%'
-    plt.title('Lag: ' + str(np.round(delay, 3)) + ' s ' + max_corr_title)
-    plt.xlabel('Lag')
+    plt.plot(corr)
+    title = 'avg correlation is: ' + str(statistics.mean(corr)*100) + '%'
+    plt.title(title)
+    plt.xlabel('time')
     plt.ylabel('Correlation coeff')
     # plt.savefig('Figure_1.png')
     plt.show()
@@ -62,9 +56,6 @@ def make_graph(leftPhone_str, rightPhone_str):
     rightPhone = np.array(rightPhone_json)
     rightPhone = rightPhone[:,1:4].astype(np.float)
 
-    # print(leftPhone)
-    print(leftPhone[0])
-    print(rightPhone[0])
 
     leftPhone_mag = []
     rightPhone_mag = []
@@ -73,7 +64,6 @@ def make_graph(leftPhone_str, rightPhone_str):
     for row in rightPhone:
         rightPhone_mag.append(abs(row[0]) + abs(row[1]) + abs(row[2]))
 
-    print(leftPhone_mag)
 
     # shorten longest recording
     shortest = len(leftPhone_mag)
