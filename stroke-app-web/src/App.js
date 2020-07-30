@@ -110,6 +110,7 @@ export default class AccelerometerSensor extends React.Component {
       myHeaders.append("Content-Type", "application/json");
   
       var raw = JSON.stringify({"leftPhone": leftPhone_json, "rightPhone": rightPhone_json});
+      console.log(raw);
   
       var requestOptions = {
         method: 'POST',
@@ -136,7 +137,7 @@ export default class AccelerometerSensor extends React.Component {
     let showPhoneData = <div style={{marginTop: "40px", marginBottom: "40px", marginLeft: "10px", fontSize: "125%", textAlign: "center"}} >Processing Phone Data...</div>;
     // console.log(this.state.processingPhoneData);
     if(!this.state.processingPhoneData){ // if not processing phone data show image
-    showPhoneData = <img style={{width: "100%"}} src='https://firebasestorage.googleapis.com/v0/b/strokeapptest.appspot.com/o/Figure_1.png?alt=media&token=549833eb-3b62-45a5-92df-205df0f5670c'/>
+    showPhoneData = <img style={{width: "50%"}} src='https://firebasestorage.googleapis.com/v0/b/strokeapptest.appspot.com/o/Figure_1.png?alt=media&token=549833eb-3b62-45a5-92df-205df0f5670c'/>
     }
 
     

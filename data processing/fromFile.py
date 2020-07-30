@@ -68,6 +68,7 @@ def make_graph(leftPhone_str, rightPhone_str):
 fileContents = {}
 fileName = "testDataArduino/armRecording.json"
 # fileName = "testDataPhone/CN0SGpAeZK4HprF3SzK7.json"
+# fileName = "testDataPhone/accuracyTestIphone6sIphone6s.json"
 with open(fileName) as f:
     fileContents = json.load(f)
 # print(fileContents)
